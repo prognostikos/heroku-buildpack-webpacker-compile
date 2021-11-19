@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eo pipefail
+
+if [ -f "$1/config/webpacker.yml" ]; then
+  exit 0
+else
+  exit 1
+fi

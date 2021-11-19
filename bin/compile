@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -eo pipefail
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+# CACHE_DAYS=34
+CACHED_PACKS="$CACHE_DIR/cached_packs"
+BUILT_PACKS="$BUILD_DIR/public/packs"
+
+echo "-----> Ensuring packs are compiled"
+
+for env_var in RAILS_ENV ASSET_HOST HOST; do
+  if [ -f "$ENV_DIR/$env_var" ]; then
+    export "$env_var=$(cat "$ENV_DIR/$env_var")"
+  fi
+done
+
+cd "$BUILD_DIR"
+bundle exec rails webpacker:compile
+
+mkdir -p "$CACHED_PACKS"
+
+for pack_dir in css js media; do
+  # copy compiled output to the cache that persists between builds
+  cp -Rp "$BUILT_PACKS/$pack_dir" "$CACHED_PACKS/$pack_dir"
+  # ensure everything from the cache + the latest build is available in the slug
+  cp -Rp  "$CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
+done
+
+# echo "-----> Cleaning cached packs"
+
+# for dir in $CACHED_PACKS $BUILT_PACKS; do
+#   find "$dir" -mtime "+$CACHE_DAYS" -print0 | xargs -0 rm
+# done
+
