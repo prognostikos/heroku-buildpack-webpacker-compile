@@ -12,7 +12,7 @@ BUILT_PACKS="$BUILD_DIR/public/packs"
 
 echo "-----> Ensuring packs are compiled"
 
-for env_var in RAILS_ENV ASSET_HOST HOST; do
+for env_var in RAILS_ENV ASSET_HOST HOST SECRET_KEY_BASE; do
   if [ -f "$ENV_DIR/$env_var" ]; then
     export "$env_var=$(cat "$ENV_DIR/$env_var")"
   fi
