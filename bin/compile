@@ -25,8 +25,13 @@ mkdir -p "$CACHED_PACKS"
 
 for pack_dir in css js media; do
   # copy compiled output to the cache that persists between builds
+  echo "Copying contents of $BUILT_PACKS/$pack_dir to $CACHED_PACKS/$pack_dir"
+  mkdir -p "$CACHED_PACKS/$pack_dir"
   cp -Rp "$BUILT_PACKS/$pack_dir" "$CACHED_PACKS/$pack_dir"
+
   # ensure everything from the cache + the latest build is available in the slug
+  echo "Copying contents of $CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
+  mkdir -p "$BUILT_PACKS/$pack_dir"
   cp -Rp  "$CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
 done
 
