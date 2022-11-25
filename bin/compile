@@ -24,18 +24,22 @@ bundle exec rails webpacker:compile
 mkdir -p "$CACHED_PACKS"
 
 for pack_dir in css js media static; do
+  # clean up deeply nested folders in cache
+  if [ -d "$CACHED_PACKS/$pack_dir/$pack_dir" ]; then
+    find "$CACHED_PACKS/$pack_dir/$pack_dir" -type f -print0 | xargs -r0 mv -nt "$CACHED_PACKS/$pack_dir/"
+    rm -r "${CACHED_PACKS:?}/$pack_dir/$pack_dir"
+  fi
+
   # copy compiled output to the cache that persists between builds
   if [ -d "$BUILT_PACKS/$pack_dir" ]; then
     echo "Copying contents of $BUILT_PACKS/$pack_dir to $CACHED_PACKS/$pack_dir"
-    mkdir -p "$CACHED_PACKS/$pack_dir"
-    cp -vRp "$BUILT_PACKS/$pack_dir" "$CACHED_PACKS/$pack_dir"
+    rsync -av "$BUILT_PACKS/$pack_dir/" "$CACHED_PACKS/$pack_dir/"
   fi
 
   # ensure everything from the cache + the latest build is available in the slug
   if [ -d "$CACHED_PACKS/$pack_dir" ]; then
-    echo "Copying contents of $CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
-    mkdir -p "$BUILT_PACKS/$pack_dir"
-    cp -vRp  "$CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
+    echo "Copying contents of $CACHED_PACKS/$pack_dir" to "$BUILT_PACKS/$pack_dir"
+    rsync -av  "$CACHED_PACKS/$pack_dir" "$BUILT_PACKS/$pack_dir"
   fi
 done
 
