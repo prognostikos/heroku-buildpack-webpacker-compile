@@ -39,7 +39,7 @@ for pack_dir in css js media static; do
   # ensure everything from the cache + the latest build is available in the slug
   if [ -d "$CACHED_PACKS/$pack_dir" ]; then
     echo "Copying contents of $CACHED_PACKS/$pack_dir" to "$BUILT_PACKS/$pack_dir"
-    cp -vRp  "$CACHED_PACKS/$pack_dir/" "$BUILT_PACKS/$pack_dir"
+    cp -vRp  "$CACHED_PACKS/$pack_dir/" "$BUILT_PACKS/"
   fi
 done
 
