@@ -7,7 +7,7 @@ ENV_DIR=$3
 
 echo "-----> Ensuring packs are compiled"
 
-for env_var in RAILS_ENV ASSET_HOST HOST SECRET_KEY_BASE; do
+for env_var in RAILS_ENV ASSET_HOST HOST SECRET_KEY_BASE AWS_REGION ACTIVE_STORAGE_BUCKET; do
   if [ -f "$ENV_DIR/$env_var" ]; then
     export "$env_var=$(cat "$ENV_DIR/$env_var")"
   fi
