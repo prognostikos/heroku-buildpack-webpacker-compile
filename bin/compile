@@ -14,4 +14,4 @@ for env_var in RAILS_ENV ASSET_HOST HOST SECRET_KEY_BASE AWS_REGION ACTIVE_STORA
 done
 
 cd "$BUILD_DIR"
-bundle exec rails webpacker:compile
+bundle exec rake webpacker:compile
